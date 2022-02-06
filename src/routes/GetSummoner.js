@@ -16,6 +16,10 @@ routes.get('/summoner/:summonerName/:region', async (req, res) => {
       });
     });
 
+  if (!summonerIdResponse) return {
+    error: 'Summoner not found',
+  }
+
   const { id, profileIconId, summonerLevel, name } = summonerIdResponse.data;
 
   const responseRanked = await axios
@@ -37,14 +41,14 @@ routes.get('/summoner/:summonerName/:region', async (req, res) => {
     (queue) => queue.queueType === 'RANKED_SOLO_5x5'
   );
 
-  const { tier, rank, wins, losses, queueType, leaguePoints } = solo || {};
-
-  // checkif solo is undefined or doesnt exist
   if (solo === undefined) {
     return res.status(404).json({
       message: 'Summoner not found',
     });
   }
+
+  const { tier, rank, wins, losses, queueType, leaguePoints } = solo || {};
+
 
 
 
