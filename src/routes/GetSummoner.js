@@ -16,8 +16,10 @@ routes.get('/summoner/:summonerName/:region', async (req, res) => {
       });
     });
 
-  if (!summonerIdResponse) return {
-    error: 'Summoner not found',
+
+  // catch error if summonerIdResponse is not found
+  if (summonerIdResponse.statusCode === 500) {
+    return "Summoner not found";
   }
 
   const { id, profileIconId, summonerLevel, name } = summonerIdResponse.data;
