@@ -10,7 +10,10 @@ routes.get('/summoner/:summonerName/:region', async (req, res) => {
       { headers: { 'X-Riot-Token': process.env.API_KEY } }
     )
     .catch((e) => {
-      return res.status(e).json(e);
+      return res.status(500).json({
+        error: e.message,
+        message: 'Summoner not found'
+      });
     });
 
   const { id, profileIconId, summonerLevel, name } = summonerIdResponse.data;
@@ -23,16 +26,28 @@ routes.get('/summoner/:summonerName/:region', async (req, res) => {
       }
     )
     .catch((e) => {
-      return res.status(e).json(e);
+      return res.status(500).json({
+        error: e.message,
+        message: 'Summoner not found'
+      });
+
     });
 
   const solo = responseRanked.data.find(
     (queue) => queue.queueType === 'RANKED_SOLO_5x5'
   );
 
-  const { tier, rank, wins, losses, queueType, leaguePoints } = solo;
+  const { tier, rank, wins, losses, queueType, leaguePoints } = solo || {};
 
-  // Check if solo.miniSeries is different from null
+  // checkif solo is undefined or doesnt exist
+  if (solo === undefined) {
+    return res.status(404).json({
+      message: 'Summoner not found',
+    });
+  }
+
+
+
   function checkMiniSeries() {
     if (solo.miniSeries !== undefined) {
       const { losses, progress, target, wins } = solo.miniSeries;
