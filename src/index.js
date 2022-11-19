@@ -15,7 +15,7 @@ app.get('/', (req, res) => {
 });
 
 require('./routes/GetSummoner')(app);
-require('./routes/GetMaestry')(app);
+require('./routes/GetMastery')(app);
 require('./routes/GetMatchHistory')(app);
 
 app.listen(port, () => {
